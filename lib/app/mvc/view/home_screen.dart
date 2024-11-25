@@ -5,11 +5,14 @@ import 'package:flutter/material.dart';
 import '../controller/api_controller.dart';
 
 class ApiTesterHome extends StatefulWidget {
+  const ApiTesterHome({super.key});
+
   @override
-  _ApiTesterHomeState createState() => _ApiTesterHomeState();
+  ApiTesterHomeState createState() => ApiTesterHomeState();
 }
 
-class _ApiTesterHomeState extends State<ApiTesterHome> with SingleTickerProviderStateMixin {
+class ApiTesterHomeState extends State<ApiTesterHome>
+    with SingleTickerProviderStateMixin {
   final TextEditingController _urlController = TextEditingController();
   final TextEditingController _headersController = TextEditingController();
   final TextEditingController _bodyController = TextEditingController();
@@ -18,7 +21,8 @@ class _ApiTesterHomeState extends State<ApiTesterHome> with SingleTickerProvider
   String _response = '';
   bool _isLoading = false;
   late TabController _tabController;
-  final ApiTestHandler _apiTestHandler = ApiTestHandler(); // Instantiate the handler
+  final ApiTestHandler _apiTestHandler =
+      ApiTestHandler(); // Instantiate the handler
 
   @override
   void initState() {
@@ -73,7 +77,7 @@ class _ApiTesterHomeState extends State<ApiTesterHome> with SingleTickerProvider
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('API Tester')),
+      appBar: AppBar(title: const Text('API Tester')),
       body: Column(
         children: [
           Padding(
@@ -94,13 +98,16 @@ class _ApiTesterHomeState extends State<ApiTesterHome> with SingleTickerProvider
                 Expanded(
                   child: TextField(
                     controller: _urlController,
-                    decoration: InputDecoration(labelText: 'API URL', border: OutlineInputBorder()),
+                    decoration: const InputDecoration(
+                        labelText: 'API URL', border: OutlineInputBorder()),
                   ),
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 ElevatedButton(
                   onPressed: _isLoading ? null : _sendRequest,
-                  child: _isLoading ? CircularProgressIndicator(color: Colors.white) : Text('Send'),
+                  child: _isLoading
+                      ? const CircularProgressIndicator(color: Colors.white)
+                      : const Text('Send'),
                 ),
               ],
             ),
@@ -109,7 +116,7 @@ class _ApiTesterHomeState extends State<ApiTesterHome> with SingleTickerProvider
             controller: _tabController,
             labelColor: Colors.blue,
             unselectedLabelColor: Colors.grey,
-            tabs: [
+            tabs: const [
               Tab(text: 'Headers'),
               Tab(text: 'Body'),
             ],
@@ -123,7 +130,7 @@ class _ApiTesterHomeState extends State<ApiTesterHome> with SingleTickerProvider
                   child: TextField(
                     controller: _headersController,
                     maxLines: 10,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: '{"key": "value"}',
                       labelText: 'Headers (JSON format)',
                       border: OutlineInputBorder(),
@@ -135,7 +142,7 @@ class _ApiTesterHomeState extends State<ApiTesterHome> with SingleTickerProvider
                   child: TextField(
                     controller: _bodyController,
                     maxLines: 10,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: '{"key": "value"}',
                       labelText: 'Body (JSON format)',
                       border: OutlineInputBorder(),
@@ -145,14 +152,15 @@ class _ApiTesterHomeState extends State<ApiTesterHome> with SingleTickerProvider
               ],
             ),
           ),
-          Divider(),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text('Response:', style: TextStyle(fontWeight: FontWeight.bold)),
+          const Divider(),
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text('Response:',
+                style: TextStyle(fontWeight: FontWeight.bold)),
           ),
           Expanded(
             child: Container(
-              padding: EdgeInsets.all(8),
+              padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
                 color: Colors.grey[200],
                 borderRadius: BorderRadius.circular(5),
@@ -160,7 +168,7 @@ class _ApiTesterHomeState extends State<ApiTesterHome> with SingleTickerProvider
               child: SingleChildScrollView(
                 child: Text(
                   _response,
-                  style: TextStyle(fontSize: 14),
+                  style: const TextStyle(fontSize: 14),
                 ),
               ),
             ),
