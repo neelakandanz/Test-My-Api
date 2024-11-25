@@ -1,15 +1,15 @@
 import 'dart:convert';
-import 'package:dio/dio.dart';
+
 import 'package:flutter/material.dart';
 
-class ApiTesterHome extends StatefulWidget {
-  const ApiTesterHome({super.key});
+import '../controller/api_controller.dart';
 
+class ApiTesterHome extends StatefulWidget {
   @override
-  ApiTesterHomeState createState() => ApiTesterHomeState();
+  _ApiTesterHomeState createState() => _ApiTesterHomeState();
 }
 
-class ApiTesterHomeState extends State<ApiTesterHome> with SingleTickerProviderStateMixin {
+class _ApiTesterHomeState extends State<ApiTesterHome> with SingleTickerProviderStateMixin {
   final TextEditingController _urlController = TextEditingController();
   final TextEditingController _headersController = TextEditingController();
   final TextEditingController _bodyController = TextEditingController();
@@ -18,6 +18,7 @@ class ApiTesterHomeState extends State<ApiTesterHome> with SingleTickerProviderS
   String _response = '';
   bool _isLoading = false;
   late TabController _tabController;
+  final ApiTestHandler _apiTestHandler = ApiTestHandler(); // Instantiate the handler
 
   @override
   void initState() {
@@ -31,30 +32,23 @@ class ApiTesterHomeState extends State<ApiTesterHome> with SingleTickerProviderS
     });
 
     try {
-      Dio dio = Dio();
       String url = _urlController.text.trim();
       Map<String, dynamic> headers = {};
       if (_headersController.text.isNotEmpty) {
         headers = json.decode(_headersController.text);
       }
 
-      Response response;
-      switch (_selectedMethod) {
-        case 'POST':
-          response = await dio.post(url, data: _bodyController.text, options: Options(headers: headers));
-          break;
-        case 'PUT':
-          response = await dio.put(url, data: _bodyController.text, options: Options(headers: headers));
-          break;
-        case 'DELETE':
-          response = await dio.delete(url, options: Options(headers: headers));
-          break;
-        default:
-          response = await dio.get(url, options: Options(headers: headers));
-      }
+      String body = _bodyController.text;
+
+      String response = await _apiTestHandler.sendRequest(
+        method: _selectedMethod,
+        url: url,
+        headers: headers,
+        body: body,
+      );
 
       setState(() {
-        _response = _formatResponse(response);
+        _response = response;
       });
     } catch (e) {
       setState(() {
@@ -64,14 +58,6 @@ class ApiTesterHomeState extends State<ApiTesterHome> with SingleTickerProviderS
       setState(() {
         _isLoading = false;
       });
-    }
-  }
-
-  String _formatResponse(Response response) {
-    try {
-      return json.encode(response.data, toEncodable: (obj) => obj.toString());
-    } catch (e) {
-      return response.toString();
     }
   }
 
