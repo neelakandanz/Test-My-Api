@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../ui/url_input_field.dart';
 import '../../utils/copyutils.dart';
@@ -92,9 +93,9 @@ class ApiTesterHomeState extends State<ApiTesterHome>
               padding: const EdgeInsets.all(0.0),
               child: Row(
                 children: [
-                  Container(
+                  Container(  
                     height: 50,
-                    color: Colors.amber,
+                    color: Colors.transparent,
                     child: DropdownButton<String>(
                       underline: Container(),
                       value: _selectedMethod,
@@ -176,9 +177,9 @@ class ApiTesterHomeState extends State<ApiTesterHome>
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   IconButton(
-                    onPressed: () {
-                      final formattedResponse = formatResponse(_response);
-                      CopyUtils.copyToClipboard(context, formattedResponse);
+                    onPressed: () async{
+                      final formattedResponse =  formatResponse(_response);
+                    CopyUtils.copyToClipboard(context, formattedResponse);
                     },
                     icon: const Icon(Icons.copy),
                   )
