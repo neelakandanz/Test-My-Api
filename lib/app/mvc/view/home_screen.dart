@@ -84,112 +84,114 @@ class ApiTesterHomeState extends State<ApiTesterHome>
         title: const Text('TEST MY API'),
         centerTitle: true,
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Container(
-                  height: 50,
-                  color: Colors.amber,
-                  child: DropdownButton<String>(
-                    underline: Container(),
-                    value: _selectedMethod,
-                    items: _methods.map((method) {
-                      return DropdownMenuItem(
-                          value: method, child: Text(method));
-                    }).toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        _selectedMethod = value!;
-                      });
-                    },
+      body: SingleChildScrollView(
+
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(0.0),
+              child: Row(
+                children: [
+                  Container(
+                    height: 50,
+                    color: Colors.amber,
+                    child: DropdownButton<String>(
+                      underline: Container(),
+                      value: _selectedMethod,
+                      items: _methods.map((method) {
+                        return DropdownMenuItem(
+                            value: method, child: Text(method));
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedMethod = value!;
+                        });
+                      },
+                    ),
                   ),
-                ),
-                Expanded(
-                  child: TextField(
-                    controller: _urlController,
-                    decoration: const InputDecoration(
-                        labelText: 'API URL', border: OutlineInputBorder()),
+                  Expanded(
+                   // width: MediaQuery.of(context).size.width /2,
+                    child: TextField(
+                      controller: _urlController,
+                      decoration: const InputDecoration(
+                          labelText: 'API URL', border: OutlineInputBorder()),
+                    ),
                   ),
-                ),
-                const SizedBox(width: 8),
-                ElevatedButton(
-                  onPressed: _isLoading ? null : _sendRequest,
-                  child: _isLoading
-                      ? const CircularProgressIndicator(color: Colors.white)
-                      : const Text('Send'),
-                ),
-              ],
+                  const SizedBox(width: 0),
+                  ElevatedButton(
+                    onPressed: _isLoading ? null : _sendRequest,
+                    child: _isLoading
+                        ? const CircularProgressIndicator(color: Colors.white)
+                        : const Text('Send'),
+                  ),
+                ],
+              ),
             ),
-          ),
-          TabBar(
-            controller: _tabController,
-            labelColor: Colors.blue,
-            unselectedLabelColor: Colors.grey,
-            tabs: const [
-              Tab(text: 'Headers'),
-              Tab(text: 'Body'),
-            ],
-          ),
-          Container(
-            color: Colors.amber,
-            height: MediaQuery.of(context).size.height / 4,
-            width: MediaQuery.of(context).size.width,
-            child: TabBarView(
+            TabBar(
               controller: _tabController,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(2.0),
-                  child: TextField(
-                    controller: _headersController,
-                    maxLines: 10,
-                    decoration: const InputDecoration(
-                      hintText: '{"key": "value"}',
-                      labelText: 'Headers (JSON format)',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(2.0),
-                  child: TextField(
-                    controller: _bodyController,
-                    maxLines: 10,
-                    decoration: const InputDecoration(
-                      hintText: '{"key": "value"}',
-                      labelText: 'Body (JSON format)',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                ),
+              labelColor: Colors.blue,
+              unselectedLabelColor: Colors.grey,
+              tabs: const [
+                Tab(text: 'Headers'),
+                Tab(text: 'Body'),
               ],
             ),
-          ),
-          const Divider(),
-          Padding(
-            padding: const EdgeInsets.all(3.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'Response',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                IconButton(
-                    onPressed: () {
-                      final formattedResponse = formatResponse(_response);
-                      CopyUtils.copyToClipboard(context, formattedResponse);
-                    },
-                    icon: const Icon(Icons.copy))
-              ],
+            SizedBox(
+              height: MediaQuery.of(context).size.height / 4,
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(2.0),
+                    child: TextField(
+                      controller: _headersController,
+                      maxLines: 10,
+                      decoration: const InputDecoration(
+                        hintText: '{"key": "value"}',
+                        labelText: 'Headers (JSON format)',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(2.0),
+                    child: TextField(
+                      controller: _bodyController,
+                      maxLines: 10,
+                      decoration: const InputDecoration(
+                        hintText: '{"key": "value"}',
+                        labelText: 'Body (JSON format)',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          ResponseViewer(
-            response: _response,
-          ),
-        ],
+            const Divider(),
+            Padding(
+              padding: const EdgeInsets.all(3.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Response',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  IconButton(
+                      onPressed: () {
+                        final formattedResponse = formatResponse(_response);
+                        CopyUtils.copyToClipboard(context, formattedResponse);
+                      },
+                      icon: const Icon(Icons.copy))
+                ],
+              ),
+            ),
+            ResponseViewer(
+              response: _response,
+            ),
+          ],
+        ),
       ),
     );
   }

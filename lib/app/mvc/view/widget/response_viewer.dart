@@ -18,21 +18,19 @@ class ResponseViewer extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
-        height: MediaQuery.of(context).size.height /4,
-        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height / 4,
+        width: double.infinity, // Ensures full width within parent constraints
         decoration: BoxDecoration(
           border: Border.all(color: Colors.grey),
           borderRadius: BorderRadius.circular(8),
         ),
         padding: const EdgeInsets.all(8),
-        child: Expanded(
-          child: SingleChildScrollView(
-            child: SelectableText(
-              formattedResponse,
-              style: const TextStyle(
-                fontSize: 14,
-                fontFamily: 'Courier', // Monospaced font for better readability
-              ),
+        child: SingleChildScrollView(
+          child: SelectableText(
+            formattedResponse,
+            style: const TextStyle(
+              fontSize: 14,
+              fontFamily: 'Courier', // Monospaced font for better readability
             ),
           ),
         ),
