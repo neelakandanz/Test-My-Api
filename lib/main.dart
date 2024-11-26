@@ -11,9 +11,10 @@ class ApiTesterApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'API Tester',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home:  ApiTesterHome(),
+      home:  const ApiTesterHome(),
     );
   }
 }

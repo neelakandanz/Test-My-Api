@@ -2,7 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
+import '../../utils/copyutils.dart';
+import '../../utils/pretty_json.dart';
 import '../controller/api_controller.dart';
+import 'widget/response_viewer.dart';
 
 class ApiTesterHome extends StatefulWidget {
   const ApiTesterHome({super.key});
@@ -77,23 +80,32 @@ class ApiTesterHomeState extends State<ApiTesterHome>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('API Tester')),
+      appBar: AppBar(
+        title: const Text('TEST MY API'),
+        centerTitle: true,
+      ),
       body: Column(
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
               children: [
-                DropdownButton<String>(
-                  value: _selectedMethod,
-                  items: _methods.map((method) {
-                    return DropdownMenuItem(value: method, child: Text(method));
-                  }).toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedMethod = value!;
-                    });
-                  },
+                Container(
+                  height: 50,
+                  color: Colors.amber,
+                  child: DropdownButton<String>(
+                    underline: Container(),
+                    value: _selectedMethod,
+                    items: _methods.map((method) {
+                      return DropdownMenuItem(
+                          value: method, child: Text(method));
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedMethod = value!;
+                      });
+                    },
+                  ),
                 ),
                 Expanded(
                   child: TextField(
@@ -121,12 +133,15 @@ class ApiTesterHomeState extends State<ApiTesterHome>
               Tab(text: 'Body'),
             ],
           ),
-          Expanded(
+          Container(
+            color: Colors.amber,
+            height: MediaQuery.of(context).size.height / 4,
+            width: MediaQuery.of(context).size.width,
             child: TabBarView(
               controller: _tabController,
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(2.0),
                   child: TextField(
                     controller: _headersController,
                     maxLines: 10,
@@ -138,7 +153,7 @@ class ApiTesterHomeState extends State<ApiTesterHome>
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(2.0),
                   child: TextField(
                     controller: _bodyController,
                     maxLines: 10,
@@ -153,25 +168,26 @@ class ApiTesterHomeState extends State<ApiTesterHome>
             ),
           ),
           const Divider(),
-          const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Text('Response:',
-                style: TextStyle(fontWeight: FontWeight.bold)),
-          ),
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(5),
-              ),
-              child: SingleChildScrollView(
-                child: Text(
-                  _response,
-                  style: const TextStyle(fontSize: 14),
+          Padding(
+            padding: const EdgeInsets.all(3.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Response',
+                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-              ),
+                IconButton(
+                    onPressed: () {
+                      final formattedResponse = formatResponse(_response);
+                      CopyUtils.copyToClipboard(context, formattedResponse);
+                    },
+                    icon: const Icon(Icons.copy))
+              ],
             ),
+          ),
+          ResponseViewer(
+            response: _response,
           ),
         ],
       ),
