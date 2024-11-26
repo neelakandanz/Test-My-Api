@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
+import '../../ui/url_input_field.dart';
 import '../../utils/copyutils.dart';
 import '../../utils/pretty_json.dart';
 import '../controller/api_controller.dart';
@@ -85,7 +86,6 @@ class ApiTesterHomeState extends State<ApiTesterHome>
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-
         child: Column(
           children: [
             Padding(
@@ -109,14 +109,9 @@ class ApiTesterHomeState extends State<ApiTesterHome>
                       },
                     ),
                   ),
-                  Expanded(
-                   // width: MediaQuery.of(context).size.width /2,
-                    child: TextField(
-                      controller: _urlController,
-                      decoration: const InputDecoration(
-                          labelText: 'API URL', border: OutlineInputBorder()),
-                    ),
-                  ),
+                  UrlInputField(
+                      controller: _urlController), // Use the new class here
+
                   const SizedBox(width: 0),
                   ElevatedButton(
                     onPressed: _isLoading ? null : _sendRequest,
