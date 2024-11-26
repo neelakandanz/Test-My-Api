@@ -7,14 +7,12 @@ class UrlInputField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: TextField(
+    return TextField(
         controller: controller,
         decoration: const InputDecoration(
           labelText: 'API URL',
           border: OutlineInputBorder(),
         ),
-      ),
-    );
+      );
   }
 }

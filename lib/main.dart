@@ -12,7 +12,7 @@ class ApiTesterApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'API Tester',
+      title: 'Test My Api',
       theme: ThemeData(primarySwatch: Colors.blue),
       home:  const ApiTesterHome(),
     );

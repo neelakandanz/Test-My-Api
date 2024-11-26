@@ -109,8 +109,10 @@ class ApiTesterHomeState extends State<ApiTesterHome>
                       },
                     ),
                   ),
-                  UrlInputField(
-                      controller: _urlController), // Use the new class here
+                  Expanded(
+                    child: UrlInputField(
+                        controller: _urlController),
+                  ), // Use the new class here
 
                   const SizedBox(width: 0),
                   ElevatedButton(
@@ -174,11 +176,12 @@ class ApiTesterHomeState extends State<ApiTesterHome>
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   IconButton(
-                      onPressed: () {
-                        final formattedResponse = formatResponse(_response);
-                        CopyUtils.copyToClipboard(context, formattedResponse);
-                      },
-                      icon: const Icon(Icons.copy))
+                    onPressed: () {
+                      final formattedResponse = formatResponse(_response);
+                      CopyUtils.copyToClipboard(context, formattedResponse);
+                    },
+                    icon: const Icon(Icons.copy),
+                  )
                 ],
               ),
             ),
