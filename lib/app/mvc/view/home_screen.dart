@@ -59,6 +59,7 @@ class ApiTesterHomeState extends State<ApiTesterHome>
 
       setState(() {
         _response = response;
+
       });
     } catch (e) {
       setState(() {
@@ -209,7 +210,11 @@ class ApiTesterHomeState extends State<ApiTesterHome>
                 ],
               ),
             ),
-            StatusRow(),
+            const StatusRow(
+              status: '200 OK',
+              size: '1.87 KB',
+              time: '37.27 s',
+            ),
             ResponseViewer(
               response: _response,
             ),
