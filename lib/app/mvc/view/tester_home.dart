@@ -49,7 +49,7 @@ class ApiTesterHomeState extends State<ApiTesterHome>
                   Container(
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.black, width: 1),
-                      borderRadius: BorderRadius.zero,
+                      borderRadius: BorderRadius.circular(4),
                     ),
                     child: DropdownButton<String>(
                       underline: Container(),
@@ -83,7 +83,7 @@ class ApiTesterHomeState extends State<ApiTesterHome>
                                 headers: _headersController.text.isNotEmpty
                                     ? json.decode(_headersController.text)
                                     : {},
-                                body: _bodyController.text,
+                                body: _bodyController.text.trim(),
                               );
                             },
                       style: ElevatedButton.styleFrom(
