@@ -90,18 +90,26 @@ class ApiTesterHomeState extends State<ApiTesterHome>
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.all(0.0),
+              padding: const EdgeInsets.symmetric(vertical: 6.0),
               child: Row(
                 children: [
-                  Container(  
-                    height: 50,
-                    color: Colors.transparent,
+                  Container(
+                    //     height: 50,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                          color: Colors.black,
+                          width: 2), // Set border color and width
+                      borderRadius: BorderRadius
+                          .zero, // No rounded corners, rectangular shape
+                    ),
                     child: DropdownButton<String>(
-                      underline: Container(),
+                      underline: Container(), // Hide the default underline
                       value: _selectedMethod,
                       items: _methods.map((method) {
                         return DropdownMenuItem(
-                            value: method, child: Text(method));
+                          value: method,
+                          child: Text(method),
+                        );
                       }).toList(),
                       onChanged: (value) {
                         setState(() {
@@ -110,18 +118,30 @@ class ApiTesterHomeState extends State<ApiTesterHome>
                       },
                     ),
                   ),
+
+                  const SizedBox(
+                    width: 2,
+                  ),
                   Expanded(
-                    child: UrlInputField(
-                        controller: _urlController),
+                    child: UrlInputField(controller: _urlController),
                   ), // Use the new class here
 
                   const SizedBox(width: 0),
                   ElevatedButton(
                     onPressed: _isLoading ? null : _sendRequest,
+                    style: ElevatedButton.styleFrom(
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius
+                            .zero, // No rounded corners, fully rectangular
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 16,
+                          horizontal: 32), // Adjust padding as needed
+                    ),
                     child: _isLoading
                         ? const CircularProgressIndicator(color: Colors.white)
                         : const Text('Send'),
-                  ),
+                  )
                 ],
               ),
             ),
@@ -177,9 +197,9 @@ class ApiTesterHomeState extends State<ApiTesterHome>
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   IconButton(
-                    onPressed: () async{
-                      final formattedResponse =  formatResponse(_response);
-                    CopyUtils.copyToClipboard(context, formattedResponse);
+                    onPressed: () async {
+                      final formattedResponse = formatResponse(_response);
+                      CopyUtils.copyToClipboard(context, formattedResponse);
                     },
                     icon: const Icon(Icons.copy),
                   )

@@ -4,6 +4,7 @@ import 'app/mvc/view/home_screen.dart';
 void main() {
   runApp(const ApiTesterApp());
 }
+
 //test
 class ApiTesterApp extends StatelessWidget {
   const ApiTesterApp({super.key});
@@ -14,7 +15,7 @@ class ApiTesterApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Test My Api',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home:  const ApiTesterHome(),
+      home: const ApiTesterHome(),
     );
   }
 }
