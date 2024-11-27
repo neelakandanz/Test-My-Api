@@ -1,7 +1,5 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:myapp/app/ui/status_row.dart';
 
 import '../../ui/url_input_field.dart';
@@ -25,10 +23,10 @@ class ApiTesterHomeState extends State<ApiTesterHome>
   final List<String> _methods = ['GET', 'POST', 'PUT', 'DELETE'];
   String _selectedMethod = 'GET';
   String _response = '';
+  String _statusCode = ''; // Store the status code
   bool _isLoading = false;
   late TabController _tabController;
-  final ApiTestHandler _apiTestHandler =
-      ApiTestHandler(); // Instantiate the handler
+  final ApiTestHandler _apiTestHandler = ApiTestHandler(); // Instantiate the handler
 
   @override
   void initState() {
@@ -50,20 +48,21 @@ class ApiTesterHomeState extends State<ApiTesterHome>
 
       String body = _bodyController.text;
 
-      String response = await _apiTestHandler.sendRequest(
+      // Send the request and get the response and status code
+      final result = await _apiTestHandler.sendRequest(
         method: _selectedMethod,
         url: url,
         headers: headers,
         body: body,
       );
-
       setState(() {
-        _response = response;
-
+        _statusCode = result['statusCode'] ?? 'N/A';
+        _response = result['response'] ?? 'No Response';
       });
     } catch (e) {
       setState(() {
         _response = 'Error: ${e.toString()}';
+        _statusCode = 'error';
       });
     } finally {
       setState(() {
@@ -80,7 +79,6 @@ class ApiTesterHomeState extends State<ApiTesterHome>
     _tabController.dispose();
     super.dispose();
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -210,10 +208,11 @@ class ApiTesterHomeState extends State<ApiTesterHome>
                 ],
               ),
             ),
-            const StatusRow(
-              status: '200 OK',
-              size: '1.87 KB',
-              time: '37.27 s',
+              // Display status code and response
+            StatusRow(
+              status: _statusCode,
+              size: '${_response.length} KB',  // Estimate size from response length
+              time: 'N/A',  // You can add time tracking logic here if needed
             ),
             ResponseViewer(
               response: _response,

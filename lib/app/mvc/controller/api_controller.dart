@@ -4,7 +4,7 @@ import 'dart:convert';
 class ApiTestHandler {
   final Dio _dio = Dio();
 
-  Future<String> sendRequest({
+  Future<Map<String, String>> sendRequest({
     required String method,
     required String url,
     Map<String, dynamic>? headers,
@@ -33,9 +33,17 @@ class ApiTestHandler {
           break;
       }
 
-      return _formatResponse(response);
-    } catch (e) {
-      return 'Error: ${e.toString()}';
+      // Return the status code and formatted response as a map
+      return {
+        'statusCode': response.statusCode.toString(),
+        'response': _formatResponse(response),
+      };
+    } 
+    catch (e) {
+      return {
+        'statusCode': 'Error',
+        'response': 'Error: ${e.toString()}',
+      };
     }
   }
 
