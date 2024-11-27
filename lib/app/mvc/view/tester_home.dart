@@ -1,11 +1,12 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:myapp/app/ui/status_row.dart';
 
 import '../../ui/url_input_field.dart';
 import '../../utils/copyutils.dart';
 import '../../utils/pretty_json.dart';
-import '../controller/api_controller.dart';
+import '../controller/tester_home_controller.dart';
 import 'widget/response_viewer.dart';
 
 class ApiTesterHome extends StatefulWidget {
@@ -22,12 +23,8 @@ class ApiTesterHomeState extends State<ApiTesterHome>
   final TextEditingController _bodyController = TextEditingController();
   final List<String> _methods = ['GET', 'POST', 'PUT', 'DELETE'];
   String _selectedMethod = 'GET';
-  String _response = '';
-  String _statusCode = ''; // Store the status code
-   String _time = ''; 
-  bool _isLoading = false;
   late TabController _tabController;
-  final ApiTestHandler _apiTestHandler = ApiTestHandler(); // Instantiate the handler
+  final ApiController _apiController = Get.put(ApiController());
 
   @override
   void initState() {
@@ -35,52 +32,6 @@ class ApiTesterHomeState extends State<ApiTesterHome>
     _tabController = TabController(length: 2, vsync: this);
   }
 
-  Future<void> _sendRequest() async {
-    setState(() {
-      _isLoading = true;
-    });
-
-    try {
-      String url = _urlController.text.trim();
-      Map<String, dynamic> headers = {};
-      if (_headersController.text.isNotEmpty) {
-        headers = json.decode(_headersController.text);
-      }
-
-      String body = _bodyController.text;
-
-      // Send the request and get the response and status code
-      final result = await _apiTestHandler.sendRequest(
-        method: _selectedMethod,
-        url: url,
-        headers: headers,
-        body: body,
-      );
-      setState(() {
-        _statusCode = result['statusCode'] ?? 'N/A';
-        _response = result['response'] ?? 'No Response';
-        _time = result['time'] ?? 'N/A';  // Time taken for the request
-      });
-    } catch (e) {
-      setState(() {
-        _response = 'Error: ${e.toString()}';
-        _statusCode = 'error';
-      });
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
-    }
-  }
-
-  @override
-  void dispose() {
-    _urlController.dispose();
-    _headersController.dispose();
-    _bodyController.dispose();
-    _tabController.dispose();
-    super.dispose();
-  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -96,16 +47,12 @@ class ApiTesterHomeState extends State<ApiTesterHome>
               child: Row(
                 children: [
                   Container(
-                    //     height: 50,
                     decoration: BoxDecoration(
-                      border: Border.all(
-                          color: Colors.black,
-                          width: 2), // Set border color and width
-                      borderRadius: BorderRadius
-                          .zero, // No rounded corners, rectangular shape
+                      border: Border.all(color: Colors.black, width: 1),
+                      borderRadius: BorderRadius.zero,
                     ),
                     child: DropdownButton<String>(
-                      underline: Container(), // Hide the default underline
+                      underline: Container(),
                       value: _selectedMethod,
                       items: _methods.map((method) {
                         return DropdownMenuItem(
@@ -120,29 +67,38 @@ class ApiTesterHomeState extends State<ApiTesterHome>
                       },
                     ),
                   ),
-
-                  const SizedBox(
-                    width: 2,
-                  ),
+                  const SizedBox(width: 2),
                   Expanded(
                     child: UrlInputField(controller: _urlController),
-                  ), // Use the new class here
-
+                  ),
                   const SizedBox(width: 0),
-                  ElevatedButton(
-                    onPressed: _isLoading ? null : _sendRequest,
-                    style: ElevatedButton.styleFrom(
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius
-                            .zero, // No rounded corners, fully rectangular
-                      ),
-                      padding: const EdgeInsets.symmetric(
+                  Obx(
+                    () => ElevatedButton(
+                      onPressed: _apiController.isLoading.value
+                          ? null
+                          : () {
+                              _apiController.sendRequest(
+                                method: _selectedMethod,
+                                url: _urlController.text.trim(),
+                                headers: _headersController.text.isNotEmpty
+                                    ? json.decode(_headersController.text)
+                                    : {},
+                                body: _bodyController.text,
+                              );
+                            },
+                      style: ElevatedButton.styleFrom(
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.zero,
+                        ),
+                        padding: const EdgeInsets.symmetric(
                           vertical: 16,
-                          horizontal: 32), // Adjust padding as needed
+                          horizontal: 32,
+                        ),
+                      ),
+                      child: _apiController.isLoading.value
+                          ? const CircularProgressIndicator(color: Colors.white)
+                          : const Text('Send'),
                     ),
-                    child: _isLoading
-                        ? const CircularProgressIndicator(color: Colors.white)
-                        : const Text('Send'),
                   )
                 ],
               ),
@@ -202,7 +158,8 @@ class ApiTesterHomeState extends State<ApiTesterHome>
                   ),
                   IconButton(
                     onPressed: () async {
-                      final formattedResponse = formatResponse(_response);
+                      final formattedResponse =
+                          formatResponse(_apiController.response.value);
                       CopyUtils.copyToClipboard(context, formattedResponse);
                     },
                     icon: const Icon(Icons.copy),
@@ -210,14 +167,17 @@ class ApiTesterHomeState extends State<ApiTesterHome>
                 ],
               ),
             ),
-              // Display status code and response
-            StatusRow(
-              status: _statusCode,
-              size: '${_response.length} KB',  // Estimate size from response length
-              time: _time,  // You can add time tracking logic here if needed
+            Obx(
+              () => StatusRow(
+                status: _apiController.statusCode.value,
+                size: '${_apiController.response.value.length} KB',
+                time: _apiController.time.value,
+              ),
             ),
-            ResponseViewer(
-              response: _response,
+            Obx(
+              () => ResponseViewer(
+                response: _apiController.response.value,
+              ),
             ),
           ],
         ),

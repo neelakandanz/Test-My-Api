@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'app/mvc/view/home_screen.dart';
+import 'app/mvc/view/tester_home.dart';
 
 void main() {
   runApp(const ApiTesterApp());
