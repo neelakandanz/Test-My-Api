@@ -10,6 +10,8 @@ class ApiTestHandler {
     Map<String, dynamic>? headers,
     String? body,
   }) async {
+    final stopwatch = Stopwatch()..start(); // Start tracking the request time
+
     try {
       Response response;
 
@@ -33,16 +35,30 @@ class ApiTestHandler {
           break;
       }
 
-      // Return the status code and formatted response as a map
+      stopwatch.stop(); // Stop the stopwatch after the request completes
+
+      // Get the elapsed time
+      String elapsedTime = '${stopwatch.elapsed.inMilliseconds} ms';
+
+      // Return the status code, response, and time taken
       return {
         'statusCode': response.statusCode.toString(),
         'response': _formatResponse(response),
+        'time': elapsedTime,
       };
-    } 
-    catch (e) {
+    } catch (e) {
+      stopwatch.stop(); // Ensure we stop the stopwatch in case of an error
+
+      String errorMessage =
+          'An unknown error occurred\nError details:\n${e.toString()}';
+      String errorCode = 'Error';
+      String elapsedTime = '${stopwatch.elapsed.inMilliseconds} ms';
+
+      // Return error details along with the time taken
       return {
-        'statusCode': 'Error',
-        'response': 'Error: ${e.toString()}',
+        'statusCode': errorCode,
+        'response': errorMessage,
+        'time': elapsedTime,
       };
     }
   }

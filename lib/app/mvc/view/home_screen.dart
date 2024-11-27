@@ -24,6 +24,7 @@ class ApiTesterHomeState extends State<ApiTesterHome>
   String _selectedMethod = 'GET';
   String _response = '';
   String _statusCode = ''; // Store the status code
+   String _time = ''; 
   bool _isLoading = false;
   late TabController _tabController;
   final ApiTestHandler _apiTestHandler = ApiTestHandler(); // Instantiate the handler
@@ -58,6 +59,7 @@ class ApiTesterHomeState extends State<ApiTesterHome>
       setState(() {
         _statusCode = result['statusCode'] ?? 'N/A';
         _response = result['response'] ?? 'No Response';
+        _time = result['time'] ?? 'N/A';  // Time taken for the request
       });
     } catch (e) {
       setState(() {
@@ -212,7 +214,7 @@ class ApiTesterHomeState extends State<ApiTesterHome>
             StatusRow(
               status: _statusCode,
               size: '${_response.length} KB',  // Estimate size from response length
-              time: 'N/A',  // You can add time tracking logic here if needed
+              time: _time,  // You can add time tracking logic here if needed
             ),
             ResponseViewer(
               response: _response,
