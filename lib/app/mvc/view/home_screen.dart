@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:myapp/app/ui/status_row.dart';
 
 import '../../ui/url_input_field.dart';
 import '../../utils/copyutils.dart';
@@ -208,6 +209,7 @@ class ApiTesterHomeState extends State<ApiTesterHome>
                 ],
               ),
             ),
+            StatusRow(),
             ResponseViewer(
               response: _response,
             ),
