@@ -46,11 +46,14 @@ class ApiTesterHomeState extends State<ApiTesterHome>
               padding: const EdgeInsets.symmetric(vertical: 6.0),
               child: Row(
                 children: [
+                  // Dropdown Button
                   Container(
+                    height: 48, // Set a consistent height
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.black, width: 1),
                       borderRadius: BorderRadius.circular(4),
                     ),
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: DropdownButton<String>(
                       underline: Container(),
                       value: _selectedMethod,
@@ -67,39 +70,47 @@ class ApiTesterHomeState extends State<ApiTesterHome>
                       },
                     ),
                   ),
-                  const SizedBox(width: 2),
+                  const SizedBox(width: 8), // Add spacing between elements
+
+                  // URL Input Field
                   Expanded(
-                    child: UrlInputField(controller: _urlController),
-                  ),
-                  const SizedBox(width: 0),
-                  Obx(
-                    () => ElevatedButton(
-                      onPressed: _apiController.isLoading.value
-                          ? null
-                          : () {
-                              _apiController.sendRequest(
-                                method: _selectedMethod,
-                                url: _urlController.text.trim(),
-                                headers: _headersController.text.isNotEmpty
-                                    ? json.decode(_headersController.text)
-                                    : {},
-                                body: _bodyController.text.trim(),
-                              );
-                            },
-                      style: ElevatedButton.styleFrom(
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.zero,
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 16,
-                          horizontal: 32,
-                        ),
-                      ),
-                      child: _apiController.isLoading.value
-                          ? const CircularProgressIndicator(color: Colors.white)
-                          : const Text('Send'),
+                    child: SizedBox(
+                      height: 48, // Match height with other widgets
+                      child: UrlInputField(controller: _urlController),
                     ),
-                  )
+                  ),
+                  const SizedBox(width: 8), // Add spacing between elements
+
+                  // Elevated Button
+                  SizedBox(
+                    height: 48, // Match height with other widgets
+                    child: Obx(
+                      () => ElevatedButton(
+                        onPressed: _apiController.isLoading.value
+                            ? null
+                            : () {
+                                _apiController.sendRequest(
+                                  method: _selectedMethod,
+                                  url: _urlController.text.trim(),
+                                  headers: _headersController.text.isNotEmpty
+                                      ? json.decode(_headersController.text)
+                                      : {},
+                                  body: _bodyController.text.trim(),
+                                );
+                              },
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(4), // Match corner radius
+                          ),
+                        ),
+                        child: _apiController.isLoading.value
+                            ? const CircularProgressIndicator(
+                                color: Colors.white)
+                            : const Text('Send'),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -146,7 +157,7 @@ class ApiTesterHomeState extends State<ApiTesterHome>
                 ],
               ),
             ),
-            const Divider(),
+           // const Divider(),
             Padding(
               padding: const EdgeInsets.all(3.0),
               child: Row(
