@@ -160,7 +160,8 @@ class ApiTesterHomeState extends State<ApiTesterHome>
                 controller: _tabController,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.all(2.0),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 6.0, horizontal: 2),
                     child: TextField(
                       controller: _headersController,
                       maxLines: 10,
@@ -172,7 +173,8 @@ class ApiTesterHomeState extends State<ApiTesterHome>
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(2.0),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 6.0, horizontal: 2),
                     child: TextField(
                       controller: _bodyController,
                       maxLines: 10,
